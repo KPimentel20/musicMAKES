@@ -1,3 +1,19 @@
+import React from 'react'
+import { Search } from 'semantic-ui-react'
+
+const styleLink = document.createElement("link");
+styleLink.rel = "stylesheet";
+styleLink.href = "https://cdn.jsdelivr.net/npm/semantic-ui/dist/semantic.min.css";
+document.head.appendChild(styleLink);
+  
+const btt = () => (
+ <div id='search'>
+   <h1>Search for Songs/Artists</h1>
+    <Search loading size='massive'/>
+ </div>
+)
+export default btt
+
 var request = require('request');
 
 var client_id = 'CLIENT_ID';

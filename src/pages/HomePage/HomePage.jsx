@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react"
-import { Container, Form } from "react-bootstrap"
+import { Container, Form } from "semantic-ui-react"
 import "./HomePage.css";
 import userService from "../../utils/userService";
 import SpotifyWebApi from 'spotify-web-api-node'

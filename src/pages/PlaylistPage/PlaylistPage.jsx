@@ -2,19 +2,19 @@ import React, { useState, useEffect } from "react";
 
 import AddPlaylistForm from "../../components/AddPlaylistForm/AddPlaylistForm";
 import ErrorMessage from "../../components/ErrorMessage/ErrorMessage";
-import * as playlistsAPI from "../..utils/playlistApi";
-import * as songsAPI from "../utils/songsApi";
+import * as playlistAPI from "../../utils/playlistApi";
+import * as songAPI from '../../utils/songApi';
 
 import { Grid } from "semantic-ui-react";
 
 export default function Playlist({user}) {
-console.log(playlistsAPI, "<-- playlistsAPI")
+console.log(playlistAPI, "<-- playlistsAPI")
 const [playlists, setPlaylists] = useState({});
 const [error, setError] = useState("");
 
  async function addSong(playlistId){
   try {
-    const data = await songsAPI.create(playlistId)
+    const data = await songAPI.create(playlistId)
     console.log(data, ' <- the response from the server when we make a song');
     getPlaylists(); // <- to go get the updated playlists with the song
   } catch(err){
@@ -25,7 +25,7 @@ const [error, setError] = useState("");
 
  async function removeSong(playlistId){
   try {
-    const data = await songsAPI.removeSong(playlistId);
+    const data = await songAPI.removeSong(playlistId);
     console.log(data, '<-  this is the response from the server when we remove a song')
     getPlaylists()
   } catch(err){
@@ -36,7 +36,7 @@ const [error, setError] = useState("");
 
  async function handleAddPlaylist(playlist) {
   try {
-    const data = await playlistsAPI.create(playlist);
+    const data = await playlistAPI.create(playlist);
     console.log(data, " this is response from the server, in handleAddSong");
     setPlaylists([data.playlist, ...playlist]);
   } catch (err) {
@@ -47,7 +47,7 @@ const [error, setError] = useState("");
 
  async function getPlaylists() {
   try {
-    const data = await playlistsAPI.getAll();
+    const data = await playlistAPI.getAll();
     console.log(data, " this is data ");
     setPlaylists([...data.playlists]);
   } catch (err) {
@@ -91,4 +91,3 @@ const [error, setError] = useState("");
     </Grid>
   );
 }
-
