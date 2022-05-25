@@ -1,6 +1,4 @@
 const express = require('express');
-const multer  = require('multer')
-const upload = multer(); // <- handles multipart/formdata requests(songs)
 const router = express.Router();
 const playlistsCtrl = require('../../controllers/playlists');
 

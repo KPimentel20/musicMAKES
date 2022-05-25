@@ -1,57 +1,99 @@
-import { useState, useEffect } from "react"
-import { Container, Form } from "semantic-ui-react"
-import "./HomePage.css";
-import userService from "../../utils/userService";
-import SpotifyWebApi from 'spotify-web-api-node'
+import React, { useState, useEffect } from "react";
 
-const spotifyApi = new SpotifyWebApi({
-    clientId: 'a0835d46e0754956858c9536a80bb23a',
-})
-//renders a search bar where viewers can search music using spotify without having spotify API interfere with jwt authentication/authorization
-export default function HomePage({ props }) {
-    const clientCred = userService(props)
-    const [search, setSearch] = useState("")
-    const [searchResults, setSearchResults] = useState([])
-    console.log(searchResults)
-    useEffect(() => {
-        if (!clientCred) return
-        spotifyApi.setClientCred(clientCred)
-    }, [clientCred])
+import PlaylistCard from "../../components/PlaylistCard/PlaylistCard";
+import AddSongsForm from "../../components/AddSongsForm/AddSongsForm";
+import AddPlaylistForm from "../../components/AddPlaylistForm/AddPlaylistForm";
+import ErrorMessage from "../../components/ErrorMessage/ErrorMessage";
+import * as songsAPI from "../../utils/songsApi";
+import * as playlistsAPI from '../../utils/playlistsApi';
 
-    useEffect(() => {
-        if (!search) return setSearchResults([])
-        if (!clientCred) return
 
-        spotifyApi.searchSongs(search).then(res => {
-            setSearchResults(res.body.songs.items.map(song => {
-                
-                const smallestAlbumImage = song.album.images.reduce((smallest, image) => {
-                    if (image.height < smallest.height) return image
-                    return smallest
-                }, song.ablum.images[0])
-                return {
-                    artist: song.artists[0].name,
-                    title: song.title,
-                    uri: song.uri,
-                    albumUrl: smallestAlbumImage.url
-                }
-            }))
-        })
-    }, [search, clientCred])
 
+import { Grid } from "semantic-ui-react";
+
+export default function Feed({user}) {
+  console.log(playlistsAPI, " <-- playlistsAPI")
+  const [playlists, setPlaylists] = useState([]); 
+  const [error, setError] = useState("");
+
+
+  async function addSong(playlistId){
+    try { 
+      const data = await songsAPI.create(playlistId)
+      console.log(data, ' <- the response from the server when we make a song');
+      getPlaylists(); 
+    } catch(err){
+      console.log(err)
+      setError(err.message)
+    }
+  }
+
+  async function removeSong(playlistId){
+    try {
+      const data = await songsAPI.removeSong(playlistId);
+      console.log(data, '<-  this is the response from the server when we remove a song')
+      getPlaylists()
+    } catch(err){
+      console.log(err);
+      setError(err.message);
+    }
+  }
+
+
+  async function handleAddPlaylist(playlist) {
+    try {
+      const data = await playlistsAPI.create(playlist); 
+      console.log(data, " this is response from the server, in handleAddPost");
+      setPlaylists([data.playlist, ...playlists]);
+    } catch (err) {
+      console.log(err);
+      setError(err.message);
+    }
+  }
+
+  async function getPlaylists() {
+    try {
+      const data = await playlistsAPI.getAll();
+      console.log(data, " this is data,");
+      setPlaylists([...data.playlists]);
+    } catch (err) {
+      console.log(err.message, " this is the error");
+      setError(err.message);
+    }
+    
+  }
+
+  useEffect(() => {
+    getPlaylists();
+  }, []);
+
+  if (error) {
     return (
-    <Container className="d-flex flex-column py-2" style={{height: "100vh"}}>
-        <Form.Control
-         type="search" 
-         placeholder="Search Songs/Artists" 
-         value={search} 
-         onChange={e => setSearch(e.target.value)}
-         />
-         <div 
-         className="flex-grow-1 my-2" //translate bootstrap css into a search bar in semantic-ui-react
-         style={{ overFlowY: "auto" }}>
-             Songs
-             </div>
-    </Container>
-  )
+      <>
+        <ErrorMessage error={error} />;
+      </>
+    );
+  }
+//playlist are posts
+//songs are likes
+  return (
+    <Grid centered>
+      <Grid.Row>
+        <Grid.Column style={{ maxWidth: 450 }}>
+          <AddPlaylistForm handleAddPlaylist={handleAddPlaylist} />
+        </Grid.Column>
+      </Grid.Row>
+      <Grid.Row>
+        <Grid.Column style={{ maxWidth: 450 }}>
+          <PlaylistCard
+            playlists={playlists}
+            numPhotosCol={1}
+            addSongs={addSong}
+            removeSongs={removeSong}
+            user={user}
+          />
+        </Grid.Column>
+      </Grid.Row>
+    </Grid>
+  );
 }

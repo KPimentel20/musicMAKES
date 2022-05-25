@@ -1,69 +1,27 @@
-import React, { useState } from 'react';
-
-import { Button, Form, Grid, Segment } from 'semantic-ui-react'
-
-export default function AddSongsForm(props){
-  const [selectedFile, setSelectedFile] = useState('')
-  const [state, setState] = useState({
-    title: ''
-  })
-
-  function handleFileInput(e){
-    setSelectedFile(e.target.files[0])
-  }
+//adding the song cards to the playlist card
+import React from 'react';
+import { Card, Segment, Image  } from 'semantic-ui-react'
+import PlaylistCard from '../PlaylistCard/PlaylistCard';
 
 
-  function handleChange(e){
-    setState({
-      ...state,
-      [e.target.name]: e.target.value
-    })
-  }
+export default function PlaylistFeed({songs, numPhotosCol, addSong, removeSong, user }){
 
-  function handleSubmit(e){
-    e.preventDefault()
-             
-    const formData = new FormData()
-    formData.append('song', selectedFile)
-    formData.append('title', state.title)
-    props.handleAddSong(formData); 
-    
-    // Have to submit the form now! We need a function!
-  }
-
-
-  return (
-    
-    <Grid textAlign='center' style={{ height: '25vh' }} verticalAlign='middle'>
-      <Grid.Column style={{ maxWidth: 450 }}>
-        <Segment>
-        
-            <Form  autoComplete="off" onSubmit={handleSubmit}>
-            
-              <Form.Input
-                  className="form-control"
-                  song="title"
-                  value={state.title}
-                  placeholder="title"
-                  onChange={handleChange}
-                  required
-              />   
-              <Form.Input
-                className="form-control"
-                type="file"
-                name="song"
-                placeholder="upload song"
-                onChange={handleFileInput}
-              />   
-              <Button
-                type="submit"
-                className="btn">
-                ADD SONG
-              </Button>
-            </Form>
+    return (
+        <Card.Group itemsPerRow={numPhotosCol} stackable>
+          <Segment>
+            <Image src="https://react.semantic-ui.com/images/wireframe/short-paragraph.png" />
           </Segment>
-      </Grid.Column>
-    </Grid>
-   
-  ); 
+        {songs.map((song) => {
+          return (
+            <PlaylistCard
+              song={song}
+              addSong={addSong}
+              removeSong={removeSong}
+              user={user}
+            />
+          );
+        })}
+      </Card.Group>
+  
+    )
 }
