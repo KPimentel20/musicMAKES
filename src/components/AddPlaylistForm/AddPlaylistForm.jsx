@@ -5,7 +5,7 @@ import { Button, Form, Grid, Segment } from 'semantic-ui-react'
 export default function AddSongsForm(props){
   const [selectedFile, setSelectedFile] = useState('')
   const [state, setState] = useState({
-    caption: ''
+    title: ''
   })
 
   function handleFileInput(e){
@@ -42,9 +42,9 @@ export default function AddSongsForm(props){
             
               <Form.Input
                   className="form-control"
-                  name="title"
+                  song="title"
                   value={state.title}
-                  placeholder="Who is the original artist?"
+                  placeholder="title"
                   onChange={handleChange}
                   required
               />   

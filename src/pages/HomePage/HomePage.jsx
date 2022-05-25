@@ -7,7 +7,7 @@ import SpotifyWebApi from 'spotify-web-api-node'
 const spotifyApi = new SpotifyWebApi({
     clientId: 'a0835d46e0754956858c9536a80bb23a',
 })
-//renders a search bar where viewers and users can search music using spotify without having spotify API interfere with jwt authentication/authorization
+//renders a search bar where viewers can search music using spotify without having spotify API interfere with jwt authentication/authorization
 export default function HomePage({ props }) {
     const clientCred = userService(props)
     const [search, setSearch] = useState("")
@@ -48,7 +48,7 @@ export default function HomePage({ props }) {
          onChange={e => setSearch(e.target.value)}
          />
          <div 
-         className="flex-grow-1 my-2" 
+         className="flex-grow-1 my-2" //translate bootstrap css into a search bar in semantic-ui-react
          style={{ overFlowY: "auto" }}>
              Songs
              </div>
