@@ -45,3 +45,11 @@ request.post(authOptions, function(error, response, body) {
     });
    }
 });
+
+// If everything goes well, you’ll receive a response similar to this containing the Access Token:
+
+// {
+//    "access_token": "NgCXRKc...MzYjw",
+//    "token_type": "bearer",
+//    "expires_in": 3600
+// }
