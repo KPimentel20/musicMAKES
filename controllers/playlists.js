@@ -2,7 +2,9 @@ const Playlist = require('../models/playlist');
 
 module.exports = {
     create,
-    index
+    index,
+    update,
+    removePlaylist
 }
 
 async function create(req, res){
@@ -29,5 +31,30 @@ async function index(req, res){
         res.status(200).json({playlists: playlists});
     } catch(err){
         res.status(400).json(err)
+    }
+}
+async function update(req, res){
+    try {
+        let updatedPlaylist = await Playlist.findByIdAndUpdate(
+            req.body._id, {
+                user: req.user,
+                title: req.body.title,
+                song: req.body.song,
+                artist: req.body.artist
+    }).exec()
+        res.status(201).json(updatedPlaylist)
+    } catch(err){
+        console.log(err, "Error (update ctrl)")
+        res.status(400).json({err})
+    }
+}
+
+async function removePlaylist(req, res) {
+    try {
+      console.log(req.params.playlistId, "<--- Playlist to be deleted")
+      const deleted = await Playlist.deleteOne({_id: req.params.playlistId})
+        res.status(200).json(deleted);
+    }catch(err){
+        res.status(400).json({err})
     }
 }

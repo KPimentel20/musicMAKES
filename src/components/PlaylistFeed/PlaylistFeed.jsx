@@ -1,8 +1,7 @@
-//holds all songs
 import React from "react";
 import { Card, Image } from "semantic-ui-react";
 
-function PlaylistCard({ playlist, removeSong, addSong, user }) {
+function PlaylistFeed({ playlist, removeSong, addSong, user }) {
 
   const songIndex = playlist.songs.findIndex(
     (song) => song.username === user.username
@@ -38,4 +37,4 @@ function PlaylistCard({ playlist, removeSong, addSong, user }) {
   );
 }
 
-export default PlaylistCard;
+export default PlaylistFeed;
